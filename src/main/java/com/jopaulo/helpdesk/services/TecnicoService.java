@@ -7,7 +7,6 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import com.jopaulo.helpdesk.domain.Pessoa;
 import com.jopaulo.helpdesk.domain.Tecnico;
