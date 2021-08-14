@@ -22,10 +22,10 @@ public class TecnicoService {
 
 	@Autowired
 	private TecnicoRepository repository;
-	
+
 	@Autowired
 	private PessoaRepository pessoaRepository;
-	
+
 	public Tecnico findById(Integer id) {
 		Optional<Tecnico> obj = repository.findById(id);
 		return obj.orElseThrow(() -> new ObjectNotFoundException("Técnico de Código '" + id + "' não encontrado"));
@@ -41,13 +41,21 @@ public class TecnicoService {
 		Tecnico obj = new Tecnico(tecnicoDTO);
 		return repository.save(obj);
 	}
+	
+	public Tecnico update(@Valid Integer id, TecnicoDTO tecnicoDTO) {
+		tecnicoDTO.setId(id);
+		Tecnico obj = findById(id);
+		validaCpfEmail(tecnicoDTO);
+		obj = new Tecnico(tecnicoDTO);
+		return repository.save(obj);
+	}
 
 	private void validaCpfEmail(TecnicoDTO tecnicoDTO) {
 		Optional<Pessoa> obj = pessoaRepository.findByCpf(tecnicoDTO.getCpf());
 		if (obj.isPresent() && obj.get().getId() != tecnicoDTO.getId()) {
 			throw new DataIntegrityViolationException("CPF já cadastrado no sistema!");
 		}
-		
+
 		obj = pessoaRepository.findByEmail(tecnicoDTO.getEmail());
 		if (obj.isPresent() && obj.get().getId() != tecnicoDTO.getId()) {
 			throw new DataIntegrityViolationException("E-mail já cadastrado no sistema!");
