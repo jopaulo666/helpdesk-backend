@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.jopaulo.helpdesk.domain.Pessoa;
@@ -24,6 +25,9 @@ public class TecnicoService {
 
 	@Autowired
 	private PessoaRepository pessoaRepository;
+	
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 
 	public Tecnico findById(Integer id) {
 		Optional<Tecnico> obj = repository.findById(id);
@@ -36,6 +40,7 @@ public class TecnicoService {
 
 	public Tecnico create(TecnicoDTO tecnicoDTO) {
 		tecnicoDTO.setId(null); // evita que o usuário inclua um id já existente
+		tecnicoDTO.setSenha(encoder.encode(tecnicoDTO.getSenha()));
 		validaCpfEmail(tecnicoDTO);
 		Tecnico obj = new Tecnico(tecnicoDTO);
 		return repository.save(obj);
