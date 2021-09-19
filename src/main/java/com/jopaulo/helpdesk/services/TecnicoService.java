@@ -48,7 +48,10 @@ public class TecnicoService {
 	
 	public Tecnico update(@Valid Integer id, TecnicoDTO tecnicoDTO) {
 		tecnicoDTO.setId(id);
-		Tecnico obj = findById(id);
+		Tecnico obj = findById(id);		
+		if (tecnicoDTO.getSenha().equals(obj.getSenha())) {
+			tecnicoDTO.setSenha(encoder.encode(tecnicoDTO.getSenha()));
+		}		
 		validaCpfEmail(tecnicoDTO);
 		obj = new Tecnico(tecnicoDTO);
 		return repository.save(obj);
